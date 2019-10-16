@@ -14,6 +14,9 @@
 import re
 import subprocess
 from random import randint
+
+from fen_validator import fenPass
+
 MAX_MOVES = 200
 UCI_MOVE_REGEX = "[a-h]\d[a-h]\d[qrnb]?"
 PV_REGEX = " pv (?P<move_list>{0}( {0})*)".format(UCI_MOVE_REGEX)
@@ -195,6 +198,11 @@ class Engine(subprocess.Popen):
         """
         set position in fen notation.  Input is a FEN string i.e. "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"
         """
+        try:
+            fenPass(fen)
+        except ValueError as e:
+            print(e.message)
+
         self.put('position fen %s' % fen)
         self.isready()
 
